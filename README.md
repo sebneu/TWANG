@@ -1,15 +1,20 @@
-# TWANG
+# TWANG (FORK)
 A Arduino-based, 1D, LED loving, dungeon crawler. inspired by Line Wobbler by Robin B
 
+This fork was done to incorporate feedback after several field tests. Details on the fork can be found at the [Buildlog.net Blog](http://www.buildlog.net/blog?s=twang)
+
+
+
 ## Video playlist
-A playlist that shows the development of TWANG and the game in both a desktop and house-sized form can be found here: https://www.youtube.com/watch?v=9yf_VINmbTE&list=PL1_Z89_x_Dff-XhOxlx6sQ38wJqe1X2M0
+A playlist that shows the development of TWANG and the game in both a desktop and house-sized form can be [found here](https://www.youtube.com/watch?v=9yf_VINmbTE&list=PL1_Z89_x_Dff-XhOxlx6sQ38wJqe1X2M0)
+
 
 ## Required libraries:
-* FastLED: http://fastled.io/
+* [FastLED](http://fastled.io/)
 * I2Cdev
-* MPU6050: https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/MPU6050
-* ToneAC: http://forum.arduino.cc/index.php?topic=142097.0
-* RunningMedian: http://playground.arduino.cc/Main/RunningMedian
+* [MPU6050](https://github.com/jrowberg/i2cdevlib/tree/master/Arduino/MPU6050)
+* [ToneAC](http://forum.arduino.cc/index.php?topic=142097.0)
+* [RunningMedian](http://playground.arduino.cc/Main/RunningMedian)
 
 ## Hardware used:
 * Arduino MEGA
@@ -17,10 +22,14 @@ A playlist that shows the development of TWANG and the game in both a desktop an
 * APA102-C LED light strip. The more the better, maximum of 1000. Tested with 2x 144/meter and 12x 60/meter strips. The FastLED lib works with the less expensive WS2812 LEDs, i've not tried them but should be fine.
 * 5v power supply, assume around 40mW per LED to calculate size
 * MPU6050 accelerometer
-* Spring doorstop, I used these: http://smile.amazon.com/gp/product/B00J4Y5BU2
+* Spring doorstop, I used [these](http://smile.amazon.com/gp/product/B00J4Y5BU2)
+
+See [Buildlog.net Blog](http://www.buildlog.net/blog?s=twang) for more details.
 
 ## Enclosure
-Files to print your own enclosure can be found here: http://www.thingiverse.com/thing:1116899
+Files to print the original enclosure can be found [here](http://www.thingiverse.com/thing:1116899)
+An alternate version of the enclosure can be found [here](https://www.thingiverse.com/thing:2770292)
+
 
 ## Overview
 TWANG was developed quickly to make my Halloween lights interactive, the code is fairly well commmented but could be improved. The following is a quick overview of the code to help you understand and tweak the game to your needs.
