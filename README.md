@@ -3,6 +3,8 @@ An Arduino-based, 1D, LED loving, dungeon crawler. inspired by Line Wobbler by R
 
 This fork was done to incorporate feedback after several field tests. Details on the fork can be found at the [Buildlog.net Blog](http://www.buildlog.net/blog?s=twang)
 
+Click image for video....
+
 [![TWANG32 Play Video](https://img.youtube.com/vi/RXpfa-ZvUMA/0.jpg)](https://www.youtube.com/watch?v=RXpfa-ZvUMA)
 
 
