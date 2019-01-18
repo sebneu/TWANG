@@ -1,6 +1,6 @@
-#include "HardwareSerial.h"
-#include <avr/wdt.h>
-#include <EEPROM.h>
+// TODO #include "HardwareSerial.h"
+// TODO #include <avr/wdt.h>
+// TODO #include <EEPROM.h>
 
 /// Defaults
 
@@ -52,26 +52,26 @@ enum ErrorNums{
 };
 
 typedef struct {
-	uint8_t settings_version; // stores the settings format version 	
-	
+	uint8_t settings_version; // stores the settings format version
+
 	uint8_t led_type;  // dotstar, neopixel
-	
+
 	uint16_t led_count;
-	uint8_t led_brightness; 	
-	
+	uint8_t led_brightness;
+
 	uint8_t joystick_deadzone;
 	uint16_t attack_threshold;
-	
+
 	uint8_t audio_volume;
-	
-	uint8_t lives_per_level;	
-	
+
+	uint8_t lives_per_level;
+
 	// saved statistics
 	uint16_t games_played;
 	uint32_t total_points;
 	uint16_t high_score;
 	uint16_t boss_kills;
-	
+
 }settings_t;
 
 settings_t user_settings;
@@ -106,7 +106,7 @@ void reset_cpu()
 void processSerial(char inChar)
 {
 	readBuffer[readIndex] = inChar;
-	
+
 		switch(readBuffer[readIndex]) {
 			case '?':// show settings
 				readIndex = 0;
@@ -114,38 +114,38 @@ void processSerial(char inChar)
 				show_settings_menu();
 				return;
 			break;
-			
+
 			case 'R': // reset to defaults
 				readIndex = 0;
 				reset_settings();
 				return;
 			break;
-			
+
 			case 'P': // reset play stats
 				user_settings.games_played = 0;
 				user_settings.total_points = 0;
-				user_settings.high_score = 0;	
+				user_settings.high_score = 0;
 				user_settings.boss_kills = 0;
 				settings_eeprom_write();
 				return;
 			break;
-			
+
 			case '!': // reboot
 				reset_cpu();
 			break;
-			
+
 			default:
 			break;
 		}
-	
+
 		if (readBuffer[readIndex] == CARRIAGE_RETURN) {
 			if (readIndex < 3) {
 				// not enough characters
 				readIndex = 0;
 			}
-			else {				
+			else {
 				readBuffer[readIndex] = 0; // mark it as the end of the string
-				change_setting(readBuffer);	
+				change_setting(readBuffer);
 				readIndex = 0;
 			}
 		}
@@ -157,47 +157,47 @@ void processSerial(char inChar)
 }
 
 void show_settings_menu() {
-	
-	
+
+
 	Serial.println("\r\n====== TWANG Settings Menu ========");
 	Serial.println("=    Current values are shown     =");
 	Serial.println("=   Send new values like B=150    =");
 	Serial.println("=     with a carriage return      =");
 	Serial.println("===================================");
-	
+
 	Serial.print("\r\nT=");
 	Serial.print(user_settings.led_type);
 	Serial.println(" (LED Type  0=APA102/Dotstar, 1=WS2812/Neopixel ... forces restart)");
-	
-	Serial.print("C=");	
+
+	Serial.print("C=");
 	Serial.print(user_settings.led_count);
 	Serial.println(" (LED Count 100-1000.. forces restart if increased above initial val.)");
-	
-	Serial.print("B=");	
+
+	Serial.print("B=");
 	Serial.print(user_settings.led_brightness);
 	Serial.println(" (LED Brightness 5-255)");
-	
+
 	Serial.print("S=");
 	Serial.print(user_settings.audio_volume);
 	Serial.println(" (Sound Volume 0-10)");
-	
+
 	Serial.print("D=");
 	Serial.print(user_settings.joystick_deadzone);
 	Serial.println(" (Joystick Deadzone 3-12)");
-	
+
 	Serial.print("A=");
 	Serial.print(user_settings.attack_threshold);
-	Serial.println(" (Attack Sensitivity 20000-35000)");	
-	
+	Serial.println(" (Attack Sensitivity 20000-35000)");
+
 	Serial.print("L=");
 	Serial.print(user_settings.lives_per_level);
-	Serial.println(" (Lives per Level (3-9))");		
-	
+	Serial.println(" (Lives per Level (3-9))");
+
 	Serial.println("\r\n(Send...)");
 	Serial.println("  ? to show current settings");
 	Serial.println("  R to reset everything to defaults");
 	Serial.println("  P to reset play statistics");
-	
+
 }
 
 void show_game_stats()
@@ -213,40 +213,40 @@ void show_game_stats()
 
 void reset_settings() {
 	user_settings.settings_version = SETTINGS_VERSION;
-	
+
 	user_settings.led_type = strip_APA102;
 	user_settings.led_count = NUM_LEDS;
 	user_settings.led_brightness = BRIGHTNESS;
-	
+
 	user_settings.joystick_deadzone = JOYSTICK_DEADZONE;
 	user_settings.attack_threshold = ATTACK_THRESHOLD;
-	
+
 	user_settings.audio_volume = MAX_VOLUME;
-	
+
 	user_settings.lives_per_level = LIVES_PER_LEVEL;
-	
+
 	user_settings.games_played = 0;
 	user_settings.total_points = 0;
-	user_settings.high_score = 0;	
+	user_settings.high_score = 0;
 	user_settings.boss_kills = 0;
-	
+
 	settings_eeprom_write();
-	
+
 }
 
 void change_setting(char *line) {
-  
-	
+
+
 	char setting_val[6];
   char param;
   uint16_t newValue;
-	
+
 	if (readBuffer[1] != '='){  // check if the equals sign is there
 		Serial.print("Missing '=' in command");
 		readIndex = 0;
 		return;
   }
-	
+
 	// move the value characters into a char array while verifying they are digits
   for(int i=0; i<5; i++) {
 	if (i+2 < readIndex) {
@@ -255,68 +255,68 @@ void change_setting(char *line) {
 		else {
 			Serial.println("Invalid setting value");
 			return;
-			
-		}			
+
+		}
 	}
 	else
 		setting_val[i] = 0;
   }
-	
+
 	param = readBuffer[0];
   newValue = atoi(setting_val); // convert the val section to an integer
-	
-	switch (param) {		 
-		
-		lastInputTime = millis(); // reset screensaver count		
+
+	switch (param) {
+
+		lastInputTime = millis(); // reset screensaver count
 
 		case 'T': // LED Type
 				user_settings.led_type = constrain(newValue, strip_APA102, strip_WS2812);
 				settings_eeprom_write();
 				reset_cpu();
 		break;
-		
+
 		case 'C': // LED Count
 				user_settings.led_count = constrain(newValue, MIN_LEDS, MAX_LEDS);
 				settings_eeprom_write();
 				if (FastLED.size() < user_settings.led_count)
-					reset_cpu(); // reset required to prevent overrun the 
-		break;	
-			
+					reset_cpu(); // reset required to prevent overrun the
+		break;
+
 		case 'B': // brightness
 			user_settings.led_brightness = constrain(newValue, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
 			FastLED.setBrightness(user_settings.led_brightness);
-			settings_eeprom_write();			
+			settings_eeprom_write();
 		break;
-		
+
 		case 'S': // sound
 			user_settings.audio_volume = constrain(newValue, MIN_VOLUME, MAX_VOLUME);
 			settings_eeprom_write();
 		break;
-		
+
 		case 'D': // deadzone, joystick
 			user_settings.joystick_deadzone = constrain(newValue, MIN_JOYSTICK_DEADZONE, MAX_JOYSTICK_DEADZONE);
-			settings_eeprom_write();		
+			settings_eeprom_write();
 		break;
-		
+
 		case 'A': // attack threshold, joystick
 			user_settings.attack_threshold = constrain(newValue, MIN_ATTACK_THRESHOLD, MAX_ATTACK_THRESHOLD);
 			settings_eeprom_write();
 		break;
-		
+
 		case 'L': // lives per level
 			user_settings.lives_per_level = constrain(newValue, MIN_LIVES_PER_LEVEL, MAX_LIVES_PER_LEVEL);
 			settings_eeprom_write();
-		break;	
-		
+		break;
+
 		default:
 			Serial.print("Command Error: ");
 			Serial.println(readBuffer[0]);
 			return;
 		break;
-	
-  } 	
-	show_settings_menu(); 
-  
+
+  }
+	show_settings_menu();
+
 }
 
 void settings_eeprom_read()
@@ -328,55 +328,55 @@ void settings_eeprom_read()
 	if (ver != SETTINGS_VERSION) {
 		Serial.println("Error: Reading EEPROM settings failed");
 		Serial.println("Loading defaults");
-		reset_settings();		
+		reset_settings();
 		return;
-	}				
-	
+	}
+
 	for (int i=0; i<sizeof(user_settings); i++)
 	{
 		temp[i] = EEPROM.read(i);
-	}	
-	
+	}
+
 	memcpy((char*)&user_settings, temp, sizeof(user_settings));
-	
-	// if any values are out of range, reset them all	
+
+	// if any values are out of range, reset them all
 	if (user_settings.led_type < strip_APA102 || user_settings.led_type > strip_WS2812)
 		read_fail = true;
-	
+
 	if (user_settings.led_count < MIN_LEDS || user_settings.led_count > MAX_LEDS)
-		read_fail = true;	
-	
+		read_fail = true;
+
 	if (user_settings.led_brightness < MIN_BRIGHTNESS || user_settings.led_brightness > MAX_BRIGHTNESS)
 		read_fail = true;
-	
+
 	if (user_settings.joystick_deadzone < MIN_JOYSTICK_DEADZONE || user_settings.joystick_deadzone > MAX_JOYSTICK_DEADZONE)
 		read_fail = true;
-	
+
 	if (user_settings.attack_threshold < MIN_ATTACK_THRESHOLD || user_settings.attack_threshold > MAX_ATTACK_THRESHOLD )
 		read_fail = true;
-	
+
 	if (user_settings.audio_volume < MIN_VOLUME || user_settings.audio_volume > MAX_VOLUME)
 		read_fail = true;
-	
+
 	if (user_settings.lives_per_level < MIN_LIVES_PER_LEVEL || user_settings.lives_per_level > MAX_LIVES_PER_LEVEL)
 		read_fail = true;
-	
-	
+
+
 	if (read_fail) {
 		reset_settings();
-		
+
 	}
-	
+
 }
 
 void settings_eeprom_write() {
-	uint8_t temp[sizeof(user_settings)];	
+	uint8_t temp[sizeof(user_settings)];
 	memcpy(temp, (char*)&user_settings, sizeof(user_settings));
-	
+
 	for (int i=0; i<sizeof(user_settings); i++)
 	{
 		EEPROM.write(i, temp[i]);
-	}	
+	}
 }
 
 void printError(int reason) {
@@ -392,4 +392,3 @@ void printError(int reason) {
 		break;
 	}
 }
-

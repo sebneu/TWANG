@@ -1,4 +1,3 @@
-#include "Arduino.h"
 
 /*
 startPoint: 0 to 1000

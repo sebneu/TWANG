@@ -1,4 +1,3 @@
-#include "Arduino.h"
 #define FRICTION 1
 
 class Particle
@@ -35,7 +34,7 @@ void Particle::Tick(int USE_GRAVITY){
         if(USE_GRAVITY && _pos > 500) _sp -= 10;
         _power = 100 - _life;
         if(_power <= 0){
-            Kill(); 
+            Kill();
         }else{
             _pos += _sp/7.0;
             if(_pos > 1000){
