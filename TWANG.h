@@ -35,7 +35,6 @@
 #include <algorithm> // min
 
 // HardwareSerial
-CurrentTime current_time;
 SFX sound;
 PiLED led;
 
@@ -261,7 +260,7 @@ void save_game_stats(bool bossKill)
 }
 
 void levelComplete(){
-    stageStartTime = current_time.milliseconds();
+    stageStartTime = millis();
     stage = WIN;
     //if(levelNumber == LEVEL_COUNT){
 	if (lastLevel) {
@@ -281,17 +280,17 @@ void die(){
 
     if(lives == 0){
        stage = GAMEOVER;
-       stageStartTime = current_time.milliseconds();
+       stageStartTime = millis();
     }
     else
     {
       for(int p = 0; p < PARTICLE_COUNT; p++){
           particlePool[p].Spawn(playerPosition);
       }
-      stageStartTime = current_time.milliseconds();
+      stageStartTime = millis();
       stage = DEAD;
     }
-    killTime = current_time.milliseconds();
+    killTime = millis();
 }
 
 long map(long x, long in_min, long in_max, long out_min, long out_max)
@@ -333,7 +332,7 @@ void tickStartup(uint64_t mm)
 			leds[i] = CRGB(0, brightness, 0);
 		}
 	}
-	sound.FreqSweepWarble(STARTUP_FADE_DUR, current_time.milliseconds()-stageStartTime, 40, 400, 20);
+	sound.FreqSweepWarble(STARTUP_FADE_DUR, millis()-stageStartTime, 40, 400, 20);
 }
 
 bool inLava(int pos){
@@ -429,7 +428,7 @@ void drawExit(){
 }
 
 void tickSpawners(){
-    uint64_t mm = current_time.milliseconds();
+    uint64_t mm = millis();
     for(int s = 0; s<SPAWN_COUNT; s++){
         if(spawnPool[s].Alive() && spawnPool[s]._activate < mm){
             if(spawnPool[s]._lastSpawned + spawnPool[s]._rate < mm || spawnPool[s]._lastSpawned == 0){
@@ -442,7 +441,7 @@ void tickSpawners(){
 
 void tickLava(){
     int A, B, p, i, brightness, flicker;
-    uint64_t mm = current_time.milliseconds();
+    uint64_t mm = millis();
 		uint8_t lava_off_brightness;
 
 		if (user_settings.led_type == strip_APA102)
@@ -507,7 +506,7 @@ bool tickParticles(){
 
 void tickConveyors(){
     int b, speed, n, i, ss, ee, led;
-    uint64_t m = 10000+current_time.milliseconds();
+    uint64_t m = 10000+millis();
     playerPositionModifier = 0;
 		uint8_t conveyor_brightness;
 
@@ -618,7 +617,7 @@ void drawLives()
 
 void drawAttack(){
     if(!attacking) return;
-    int n = map(current_time.milliseconds() - attackMillis, 0, ATTACK_DURATION, 100, 5);
+    int n = map(millis() - attackMillis, 0, ATTACK_DURATION, 100, 5);
     for(int i = getLED(playerPosition-(attack_width/2))+1; i<=getLED(playerPosition+(attack_width/2))-1; i++){
         leds[i] = CRGB(0, 0, n);
     }
@@ -650,7 +649,7 @@ void updateLives(){
 // ---------------------------------
 void screenSaverTick(){
     int n, b, c, i;
-    uint64_t mm = current_time.milliseconds();
+    uint64_t mm = millis();
     int mode = (mm/30000)%5;
 
 	sound.complete(); // make sure there is not sound...play testing showed this to be a problem
@@ -881,7 +880,7 @@ void loadLevel(){
           spawnBoss();
           break;
     }
-    stageStartTime = current_time.milliseconds();
+    stageStartTime = millis();
     stage = PLAY;
 }
 
@@ -975,12 +974,12 @@ void setup() {
 	#endif
 
 	stage = STARTUP;
-	stageStartTime = current_time.milliseconds();
+	stageStartTime = millis();
 	lives = user_settings.lives_per_level;
 }
 
 void loop() {
-  uint64_t mm = current_time.milliseconds();
+  uint64_t mm = millis();
 
 	// TODO while(Serial.available()) {  // see if there are someone is trying to edit settings via serial port
 	//	processSerial(Serial.read());

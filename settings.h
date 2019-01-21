@@ -276,8 +276,7 @@ void change_setting(char *line) {
 
 	switch (param) {
 
-		CurrentTime current_time;
-		lastInputTime = current_time.milliseconds(); // reset screensaver count
+		lastInputTime = millis(); // reset screensaver count
 
 		case 'T': // LED Type
 				user_settings.led_type = constrain(newValue, strip_APA102, strip_WS2812);

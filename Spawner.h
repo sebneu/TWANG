@@ -22,7 +22,6 @@ class Spawner
     long _activate;
   private:
     int _alive;
-    CurrentTime current_time;
 };
 
 void Spawner::Spawn(int pos, int rate, int speed, int dir, long activate){
@@ -30,7 +29,7 @@ void Spawner::Spawn(int pos, int rate, int speed, int dir, long activate){
     _rate = rate;
     _speed = speed;
     _dir = dir;
-    _activate = current_time.milliseconds() + activate; // TODO milliseconds the program is running
+    _activate = millis() + activate; // TODO milliseconds the program is running
     _alive = 1;
 }
 

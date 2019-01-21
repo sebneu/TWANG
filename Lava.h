@@ -33,7 +33,7 @@ void Lava::Spawn(int left, int right, int ontime, int offtime, int offset, int s
     _offtime = offtime;
     _offset = offset;
     _alive = 1;
-    _lastOn = ct.milliseconds()-offset;
+    _lastOn = millis()-offset;
     _state = state;
 }
 
