@@ -18,7 +18,7 @@ Click image for video....(ESP32 Version)
 ## Hardware used:
 * Arduino MEGA
 * 3 LEDs for life indicator (optional) This fork displays the remaining lives on the LED strip.
-* LED light strip. (60 to 1000 LEDs) Tested with..... 
+* LED light strip. (60 to 1000 LEDs) Tested with.....
   * 1 meter 60 LEDs (good)
   * 1 meter 144 LEDs. (awesome. Great for running on table)
   * 2 meter 288 LEDs. (awesome. The increased resolution makes the game a little easier to win)
@@ -56,7 +56,7 @@ The game also has 3 regular LEDs for life indicators (the player gets 3 lives wh
 **USE_GRAVITY** 0/1 to set if particles created by the player getting killed should fall towards the start point, the BEND_POINT variable can be set to mark the point at which the strip of LEDs goes from been horizontal to vertical. The game is 1000 units wide (regardless of number of LED's) so 500 would be the mid point. If this is confusing just set USE_GRAVITY to 0
 
 ##  Serial Port Options Menu (New!) ##
-All of the basic setup options can now be set over the serial port. An easy to use serial terminal is the Serial Console of the Arduino IDE. Open the Com Port that appears when you plug in the TWANG USB. 
+All of the basic setup options can now be set over the serial port. An easy to use serial terminal is the Serial Console of the Arduino IDE. Open the Com Port that appears when you plug in the TWANG USB.
 Set it up for 115200 baud and have it add a carriage return when sending. You should see this menu.
 
 ![](http://www.buildlog.net/blog/wp-content/uploads/2018/04/twang_console.png)
@@ -67,7 +67,7 @@ You can change any of these settings. Send B=225 to change the LED brightness to
 There are also 3 single character commands (?, R, P)
 
 ## Modifying / Creating levels
-Find the loadLevel() function, in there you can see a switch statment with the 10 levels I created. 
+Find the loadLevel() function, in there you can see a switch statment with the 10 levels I created.
 They all call different functions and variables to setup the level. Each one is described below:
 
 **playerPosition;** Where the player starts on the 0 to 1000 line. If not set it defaults to 0. I set it to 200 in the first level so the player can see movement even if the first action they take is to push the joystick left

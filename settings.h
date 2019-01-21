@@ -1,6 +1,11 @@
 // TODO #include "HardwareSerial.h"
 // TODO #include <avr/wdt.h>
-// TODO #include <EEPROM.h>
+#include <iostream>
+#include <ctype.h>
+
+// Adruino port
+#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
+
 
 /// Defaults
 
@@ -9,7 +14,7 @@
 #define SETTINGS_VERSION 4
 
 // LED
-#define NUM_LEDS             288
+#define NUM_LEDS        288
 #define MIN_LEDS				60
 #define MAX_LEDS				1000
 
@@ -88,19 +93,20 @@ void processSerial(char inChar);
 void show_settings_menu();
 void reset_settings();
 void change_setting(char *line);
-void settings_eeprom_write();
-void settings_eeprom_write();
+void settings_write();
+void settings_write();
 void printError(int reason);
 void show_game_stats();
 
 
 void reset_cpu()
 {
-  wdt_enable(WDTO_15MS);
-  while(1)
-  {
+	std::cout << "RESTART; NOT IMPLEMENTED" << '\n';
+	//wdt_enable(WDTO_15MS);
+  //while(1)
+  //{
     // wait for it...boom
-  }
+  //}
 }
 
 void processSerial(char inChar)
@@ -110,7 +116,7 @@ void processSerial(char inChar)
 		switch(readBuffer[readIndex]) {
 			case '?':// show settings
 				readIndex = 0;
-				Serial.print("TWANG VERSION: "); Serial.println(VERSION);
+				std::cout << "TWANG VERSION: " << VERSION << '\n';
 				show_settings_menu();
 				return;
 			break;
@@ -126,7 +132,7 @@ void processSerial(char inChar)
 				user_settings.total_points = 0;
 				user_settings.high_score = 0;
 				user_settings.boss_kills = 0;
-				settings_eeprom_write();
+				settings_write();
 				return;
 			break;
 
@@ -159,56 +165,60 @@ void processSerial(char inChar)
 void show_settings_menu() {
 
 
-	Serial.println("\r\n====== TWANG Settings Menu ========");
-	Serial.println("=    Current values are shown     =");
-	Serial.println("=   Send new values like B=150    =");
-	Serial.println("=     with a carriage return      =");
-	Serial.println("===================================");
+	std::cout << "\r\n====== TWANG Settings Menu ========" << '\n';
+	std::cout << "=    Current values are shown     =" << '\n';
+	std::cout << "=   Send new values like B=150    =" << '\n';
+	std::cout << "=     with a carriage return      =" << '\n';
+	std::cout << "===================================" << '\n';
 
-	Serial.print("\r\nT=");
-	Serial.print(user_settings.led_type);
-	Serial.println(" (LED Type  0=APA102/Dotstar, 1=WS2812/Neopixel ... forces restart)");
+	std::cout << "\r\nT=";
+	std::cout << user_settings.led_type;
+	std::cout << " (LED Type  0=APA102/Dotstar, 1=WS2812/Neopixel ... forces restart)" << '\n';
 
-	Serial.print("C=");
-	Serial.print(user_settings.led_count);
-	Serial.println(" (LED Count 100-1000.. forces restart if increased above initial val.)");
+	std::cout << "C=";
+	std::cout << user_settings.led_count;
+	std::cout << " (LED Count 100-1000.. forces restart if increased above initial val.)" << '\n';
 
-	Serial.print("B=");
-	Serial.print(user_settings.led_brightness);
-	Serial.println(" (LED Brightness 5-255)");
+	std::cout << "B=";
+	std::cout << user_settings.led_brightness;
+	std::cout << " (LED Brightness 5-255)" << '\n';
 
-	Serial.print("S=");
-	Serial.print(user_settings.audio_volume);
-	Serial.println(" (Sound Volume 0-10)");
+	std::cout << "S=";
+	std::cout << user_settings.audio_volume;
+	std::cout << " (Sound Volume 0-10)" << '\n';
 
-	Serial.print("D=");
-	Serial.print(user_settings.joystick_deadzone);
-	Serial.println(" (Joystick Deadzone 3-12)");
+	std::cout << "D=";
+	std::cout << user_settings.joystick_deadzone;
+	std::cout << " (Joystick Deadzone 3-12)" << '\n';
 
-	Serial.print("A=");
-	Serial.print(user_settings.attack_threshold);
-	Serial.println(" (Attack Sensitivity 20000-35000)");
+	std::cout << "A=";
+	std::cout << user_settings.attack_threshold;
+	std::cout << " (Attack Sensitivity 20000-35000)" << '\n';
 
-	Serial.print("L=");
-	Serial.print(user_settings.lives_per_level);
-	Serial.println(" (Lives per Level (3-9))");
+	std::cout << "L=";
+	std::cout << user_settings.lives_per_level;
+	std::cout << " (Lives per Level (3-9))" << '\n';
 
-	Serial.println("\r\n(Send...)");
-	Serial.println("  ? to show current settings");
-	Serial.println("  R to reset everything to defaults");
-	Serial.println("  P to reset play statistics");
+	std::cout << "\r\n(Send...)";
+	std::cout << "  ? to show current settings";
+	std::cout << "  R to reset everything to defaults";
+	std::cout << "  P to reset play statistics" << '\n';
 
 }
 
 void show_game_stats()
 {
-	Serial.println("\r\n ===== Play statistics ======");
-	Serial.print("Games played: ");Serial.println(user_settings.games_played);
+	std::cout << "\r\n ===== Play statistics ======" << '\n';
+	std::cout << "Games played: ";
+	std::cout << user_settings.games_played << '\n';
 	if (user_settings.games_played > 0)	{
-		Serial.print("Average Score: ");Serial.println(user_settings.total_points / user_settings.games_played);
+		std::cout << "Average Score: ";
+		std::cout << user_settings.total_points / user_settings.games_played << '\n';
 	}
-	Serial.print("High Score: ");Serial.println(user_settings.high_score);
-	Serial.print("Boss kills: ");Serial.println(user_settings.boss_kills);
+	std::cout << "High Score: ";
+	std::cout << user_settings.high_score << '\n';
+	std::cout << "Boss kills: ";
+	std::cout << user_settings.boss_kills << '\n';
 }
 
 void reset_settings() {
@@ -230,19 +240,18 @@ void reset_settings() {
 	user_settings.high_score = 0;
 	user_settings.boss_kills = 0;
 
-	settings_eeprom_write();
+	settings_write();
 
 }
 
 void change_setting(char *line) {
-
 
 	char setting_val[6];
   char param;
   uint16_t newValue;
 
 	if (readBuffer[1] != '='){  // check if the equals sign is there
-		Serial.print("Missing '=' in command");
+		std::cout << "Missing '=' in command" << '\n';
 		readIndex = 0;
 		return;
   }
@@ -250,10 +259,10 @@ void change_setting(char *line) {
 	// move the value characters into a char array while verifying they are digits
   for(int i=0; i<5; i++) {
 	if (i+2 < readIndex) {
-		if (isDigit(readBuffer[i+2]))
+		if (isdigit(readBuffer[i+2]))
 			setting_val[i] = readBuffer[i+2];
 		else {
-			Serial.println("Invalid setting value");
+			std::cout << "Invalid setting value" << '\n';
 			return;
 
 		}
@@ -267,50 +276,51 @@ void change_setting(char *line) {
 
 	switch (param) {
 
-		lastInputTime = millis(); // reset screensaver count
+		CurrentTime current_time;
+		lastInputTime = current_time.milliseconds(); // reset screensaver count
 
 		case 'T': // LED Type
 				user_settings.led_type = constrain(newValue, strip_APA102, strip_WS2812);
-				settings_eeprom_write();
+				settings_write();
 				reset_cpu();
 		break;
 
 		case 'C': // LED Count
 				user_settings.led_count = constrain(newValue, MIN_LEDS, MAX_LEDS);
-				settings_eeprom_write();
-				if (FastLED.size() < user_settings.led_count)
+				settings_write();
+				if (NUM_LEDS < user_settings.led_count)
 					reset_cpu(); // reset required to prevent overrun the
 		break;
 
 		case 'B': // brightness
 			user_settings.led_brightness = constrain(newValue, MIN_BRIGHTNESS, MAX_BRIGHTNESS);
-			FastLED.setBrightness(user_settings.led_brightness);
-			settings_eeprom_write();
+			led.setBrightness(user_settings.led_brightness);
+			settings_write();
 		break;
 
 		case 'S': // sound
 			user_settings.audio_volume = constrain(newValue, MIN_VOLUME, MAX_VOLUME);
-			settings_eeprom_write();
+			settings_write();
 		break;
 
 		case 'D': // deadzone, joystick
 			user_settings.joystick_deadzone = constrain(newValue, MIN_JOYSTICK_DEADZONE, MAX_JOYSTICK_DEADZONE);
-			settings_eeprom_write();
+			settings_write();
 		break;
 
 		case 'A': // attack threshold, joystick
 			user_settings.attack_threshold = constrain(newValue, MIN_ATTACK_THRESHOLD, MAX_ATTACK_THRESHOLD);
-			settings_eeprom_write();
+			settings_write();
 		break;
 
 		case 'L': // lives per level
 			user_settings.lives_per_level = constrain(newValue, MIN_LIVES_PER_LEVEL, MAX_LIVES_PER_LEVEL);
-			settings_eeprom_write();
+			settings_write();
 		break;
 
 		default:
-			Serial.print("Command Error: ");
-			Serial.println(readBuffer[0]);
+			std::cout << "Command Error: ";
+			std::cout << readBuffer[0] << '\n';
 			return;
 		break;
 
@@ -319,25 +329,25 @@ void change_setting(char *line) {
 
 }
 
-void settings_eeprom_read()
-{
-	uint8_t ver = EEPROM.read(0);
+void settings_read() {
+	return; // TODO
+	uint8_t ver = 4; // TODO EEPROM.read(0);
 	uint8_t temp[sizeof(user_settings)];
 	bool read_fail = false;
 
 	if (ver != SETTINGS_VERSION) {
-		Serial.println("Error: Reading EEPROM settings failed");
-		Serial.println("Loading defaults");
+		std::cout << "Error: Reading  settings failed" << '\n';
+		std::cout << "Loading defaults" << '\n';
 		reset_settings();
 		return;
 	}
 
 	for (int i=0; i<sizeof(user_settings); i++)
 	{
-		temp[i] = EEPROM.read(i);
+		// TODO temp[i] = EEPROM.read(i);
 	}
 
-	memcpy((char*)&user_settings, temp, sizeof(user_settings));
+	//memcpy((char*)&user_settings, temp, sizeof(user_settings));
 
 	// if any values are out of range, reset them all
 	if (user_settings.led_type < strip_APA102 || user_settings.led_type > strip_WS2812)
@@ -369,26 +379,28 @@ void settings_eeprom_read()
 
 }
 
-void settings_eeprom_write() {
+void settings_write() {
+	return; // TODO
 	uint8_t temp[sizeof(user_settings)];
-	memcpy(temp, (char*)&user_settings, sizeof(user_settings));
+	//memcpy(temp, (char*)&user_settings, sizeof(user_settings));
 
 	for (int i=0; i<sizeof(user_settings); i++)
 	{
-		EEPROM.write(i, temp[i]);
+		// TODO EEPROM.write(i, temp[i]);
 	}
 }
 
 void printError(int reason) {
 	switch(reason) {
 		case ERR_SETTING_NUM:
-			Serial.print("Error: Invalid setting number");
+			std::cout << "Error: Invalid setting number" << '\n';
 		break;
 		case ERR_SETTING_RANGE:
-			Serial.print("Error: Setting out of range");
+			std::cout << "Error: Setting out of range" << '\n';
 		break;
 		default:
-			Serial.print("Error:");Serial.println(reason);
+			std::cout << "Error:";
+			std::cout << reason << '\n';
 		break;
 	}
 }

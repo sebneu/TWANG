@@ -1,3 +1,4 @@
+#include <math.h>
 
 class Enemy
 {
@@ -10,6 +11,7 @@ class Enemy
     int _wobble;
     int playerSide;
   private:
+    CurrentTime ct;
     int _dir;
     int _speed;
     int _alive;
@@ -28,7 +30,7 @@ void Enemy::Spawn(int pos, int dir, int speed, int wobble){
 void Enemy::Tick(){
     if(_alive){
         if(_wobble > 0){
-            _pos = _origin + (sin((millis()/3000.0)*_speed)*_wobble);
+            _pos = _origin + (sin((ct.milliseconds()/3000.0)*_speed)*_wobble);
         }else{
             if(_dir == 0){
                 _pos -= _speed;

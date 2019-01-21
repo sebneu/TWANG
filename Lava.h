@@ -22,6 +22,7 @@ class Lava
     static const int OFF = 0;
     static const int ON = 1;
   private:
+    CurrentTime ct;
     int _alive;
 };
 
@@ -32,7 +33,7 @@ void Lava::Spawn(int left, int right, int ontime, int offtime, int offset, int s
     _offtime = offtime;
     _offset = offset;
     _alive = 1;
-    _lastOn = millis()-offset;
+    _lastOn = ct.milliseconds()-offset;
     _state = state;
 }
 
