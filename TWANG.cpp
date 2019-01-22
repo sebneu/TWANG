@@ -22,7 +22,10 @@
 #define VERSION "2019-01-21"
 
 // Required libs
-#include "PiLED.h"
+// TODO #include "PiLED.h"
+#include "LED.h"
+#include "FastLED/pixeltypes.h"
+
 #include "SFX.h"
 // TODO #include "I2Cdev.h"
 #include "MPU6050.h"
@@ -36,7 +39,7 @@
 
 // HardwareSerial
 SFX sound;
-PiLED led;
+LED led;
 
 
 // Included libs
@@ -912,7 +915,7 @@ void tickBossKilled(uint64_t mm) // boss funeral
 
 	if(stageStartTime+6500 > mm){
 		gHue++;
-		fill_rainbow( leds, user_settings.led_count, gHue, 7); // LED's built in rainbow
+		// TODO fill_rainbow( leds, user_settings.led_count, gHue, 7); // LED's built in rainbow
 		if( random8() < 200) {  // add glitter
 			leds[ random16(user_settings.led_count) ] += CRGB::White;
 		}
@@ -964,6 +967,7 @@ void setup() {
 
   // LEDController
 	// TODO piLED = PiLED(leds, NUM_LEDS);
+	led.setup(leds, VIRTUAL_LED_COUNT);
 
   // Life LEDs
 	#ifdef USE_LIFELEDS
