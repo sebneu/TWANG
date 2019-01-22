@@ -12,7 +12,12 @@
 #ifndef RunningMedian_h
 #define RunningMedian_h
 
+#include "wiringPi.h"
 #include <inttypes.h>
+#include <cmath>
+#include <algorithm> // min, max
+
+#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 
 #define RUNNING_MEDIAN_VERSION "0.1.15"
 
@@ -181,13 +186,13 @@ float RunningMedian::predict(const uint8_t n)
   float med = getMedian();  // takes care of sorting !
   if (_cnt & 0x01)
   {
-    return max(med - _ar[_p[_cnt/2-n]], _ar[_p[_cnt/2+n]] - med);
+    return std::max(med - _ar[_p[_cnt/2-n]], _ar[_p[_cnt/2+n]] - med);
   }
   else
   {
     float f1 = (_ar[_p[_cnt/2 - n]] + _ar[_p[_cnt/2 - n - 1]])/2;
     float f2 = (_ar[_p[_cnt/2 + n]] + _ar[_p[_cnt/2 + n - 1]])/2;
-    return max(med - f1, f2 - med)/2;
+    return std::max(med - f1, f2 - med)/2;
   }
 }
 #endif
