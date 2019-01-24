@@ -12,7 +12,7 @@
 #ifndef RunningMedian_h
 #define RunningMedian_h
 
-#include "wiringPi.h"
+#include <wiringPi.h>
 #include <inttypes.h>
 #include <cmath>
 #include <algorithm> // min, max

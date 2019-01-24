@@ -24,11 +24,11 @@
 // Required libs
 // TODO #include "PiLED.h"
 #include "LED.h"
-#include "FastLED/pixeltypes.h"
+#include "PiLED.h"
 
 #include "SFX.h"
 // TODO #include "I2Cdev.h"
-#include "MPU6050.h"
+#include "MPUController.h"
 // TODO #include "Wire.h"
 #include "iSin.h"
 #include "RunningMedian.h"
@@ -36,6 +36,7 @@
 
 #include <stdint.h> // uint8_t type variables
 #include <algorithm> // min
+#include <wiringPi.h>
 
 // HardwareSerial
 SFX sound;
@@ -166,7 +167,7 @@ Conveyor conveyorPool[CONVEYOR_COUNT] = {
 Boss boss = Boss();
 
 // MPU
-MPU6050 accelgyro;
+MPUController accelgyro;
 CRGB leds[VIRTUAL_LED_COUNT]; // this is set to the max, but the actual number used is set in LED.addLeds below
 RunningMedian MPUAngleSamples = RunningMedian(5);
 RunningMedian MPUWobbleSamples = RunningMedian(5);
@@ -317,10 +318,10 @@ void tickStartup(uint64_t mm)
 	else if(stageStartTime+STARTUP_SPARKLE_DUR > mm) // sparkle the full green bar
 	{
 		for(int i = 0; i< user_settings.led_count; i++){
-			if(random8(30) < 28)
+			if((rand()%30) < 28)
 				leds[i] = CRGB(0, 255, 0);  // most are green
 			else {
-				int flicker = random8(250);
+				int flicker = (rand()%250);
 				leds[i] = CRGB(flicker, 150, flicker); // some flicker brighter
 			}
 		}
@@ -466,7 +467,7 @@ void tickLava(){
                     LP._lastOn = mm;
                 }
                 for(p = A; p<= B; p++){
-					flicker = random8(lava_off_brightness);
+					flicker = (rand()%lava_off_brightness);
                     leds[p] = CRGB(lava_off_brightness+flicker, (lava_off_brightness+flicker)/1.5, 0);
                 }
             }else if(LP._state == Lava::ON){
@@ -475,7 +476,7 @@ void tickLava(){
                     LP._lastOn = mm;
                 }
                 for(p = A; p<= B; p++){
-					if(random8(30) < 29)
+					if((rand()%30) < 29)
 						leds[p] = CRGB(150, 0, 0);
 					else
 						leds[p] = CRGB(180, 100, 0);
@@ -674,7 +675,7 @@ void screenSaverTick(){
         // Random flashes
   			srand(mm);
         for(i = 0; i<user_settings.led_count; i++){
-            if(random8(20) == 0){
+            if((rand()%20) == 0){
                 leds[i] = CHSV( 25, 255, 100);
             }
         }
@@ -916,8 +917,8 @@ void tickBossKilled(uint64_t mm) // boss funeral
 	if(stageStartTime+6500 > mm){
 		gHue++;
 		// TODO fill_rainbow( leds, user_settings.led_count, gHue, 7); // LED's built in rainbow
-		if( random8() < 200) {  // add glitter
-			leds[ random16(user_settings.led_count) ] += CRGB::White;
+		if( rand() < 200) {  // add glitter
+			leds[ (rand()%user_settings.led_count) ] += CRGB::White;
 		}
 		sound.bosskilled();
 	}else if(stageStartTime+7000 > mm){
